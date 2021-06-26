@@ -1,0 +1,119 @@
+<div class="container-fluid">
+  <h3 class="text-dark mb-4">Users</h3>
+  <div class="card-header shadow py-1">
+    <button type="button" class="btn btn-primary btn-rounded" (click)="openModal()">New User</button>
+  </div>
+  <div class="card shadow">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="text-md-start dataTables_filter "><label class="form-label"><input
+                type="search" class="form-control form-control-sm" aria-controls="dataTable"
+                placeholder="Search by user name"/></label>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="text-md-start dataTables_filter"><label class="form-label"><input
+              type="search" class="form-control form-control-sm" aria-controls="dataTable"
+              placeholder="Search by role"/></label>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 text-nowrap">
+          <div id="dataTable_length" class="dataTables_length float-end" aria-controls="dataTable">
+            <label class="form-label">
+              <select class="d-inline-block form-select form-select-sm" [(ngModel)]="pageSize">
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+      </div>
+      <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+        <table class="table my-0" id="dataTable">
+          <thead>
+          <tr>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>User Name</th>
+            <th>Role</th>
+            <th>Join date</th>
+            <th>Last login</th>
+            <th>Active</th>
+            <th>Lock</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+          <tbody *ngFor="let user of users; index as i">
+          <tr>
+            <td><img class="rounded-circle me-2" width="30" height="30"
+                     src="{{user?.profileImageUrl}}"/>{{user.firstName}}
+            </td>
+            <td>{{user.lastName}}</td>
+            <td>{{user.userName}}</td>
+            <td>{{user.role}}</td>
+            <td>{{user.joinDate | date: "dd/MM/yy"}}</td>
+            <td>{{user.lastLoginDate | date: "dd/MM/yy"}}</td>
+            <td>{{user.isActive ? 'Yes' : 'No'}}</td>
+            <td>{{user.isLock ? 'Yes' : 'No'}}</td>
+            <td>
+              <a class="rounded d-inline scroll-to-top m-2" (click)="deleteUser(user)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                     class="bi bi-trash">
+                  <path
+                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+                  <path fill-rule="evenodd"
+                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+                </svg>
+              </a>
+              <a class="rounded d-inline scroll-to-top" (click)="editUser(user)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                     class="bi bi-pencil-fill fa-sm fa-fw me-2 text-gray-400">
+                  <path fill-rule="evenodd"
+                        d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"></path>
+                </svg>
+              </a>
+            </td>
+
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div class="col-md-6 align-self-center">
+          <p id="dataTable_info" class="dataTables_info" role="status"
+             aria-live="polite">{{'Showing ' + (pageSize * (activePage - 1) + 1) + ' to ' + (pageSize * (activePage) > totalNumberOfUsers ? totalNumberOfUsers : pageSize * (activePage)) + ' of ' + totalNumberOfUsers}}</p>
+        </div>
+        <div class="col-md-6">
+          <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+            <ul class="pagination">
+              <li
+                class="page-item"
+                [ngClass]="{'disabled': !activePrev}"
+                (click)="goToPrev()"><a class="page-link" aria-label="Previous"><span
+                aria-hidden="true">«</span></a></li>
+              <div *ngFor="let in of pageArray; let i = index">
+                <li
+                  class="page-item"
+                  [ngClass]="{'active': in === activePage}"
+                  (click)="goToPage(in)"><a class="page-link">{{in}}</a></li>
+              </div>
+              <li class="page-item"
+                  [ngClass]="{'disabled': !activeNext}"
+                  (click)="goToNext()">
+                <a class="page-link" aria-label="Next"><span
+                  aria-hidden="true">»</span></a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

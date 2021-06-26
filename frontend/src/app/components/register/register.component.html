@@ -1,0 +1,97 @@
+<div class="container">
+  <div class="card shadow-lg o-hidden border-0 my-5">
+    <div class="card-body p-0">
+      <div class="row">
+        <div class="col-lg-5 d-none d-lg-flex">
+          <div class="flex-grow-1 bg-register-image" style="background-image: url('../../../assets/wall.jpg');"></div>
+        </div>
+        <div class="col-lg-7">
+          <div class="p-5">
+            <div class="text-center">
+              <h4 class="text-dark mb-4">Create an Account!</h4>
+            </div>
+            <div *ngIf="error" class="alert alert-danger" role="alert">
+              {{error}}
+            </div>
+            <form class="user"
+                  [formGroup]="registerForm"
+                  (ngSubmit)="onSubmit()">
+              <div class="row mb-3">
+                <div class="col-sm-6 mb-3 mb-sm-0 form-group">
+                  <input
+                    class="form-control form-control-user"
+                    type="text"
+                    id="firstName"
+                    placeholder="First Name"
+                    formControlName="firstName"
+                    />
+                </div>
+                <div class="col-sm-6">
+                  <input
+                    class="form-control form-control-user"
+                    type="text"
+                    id="lastName"
+                    placeholder="Last Name"
+                    formControlName="lastName"
+                    required/>
+                </div>
+              </div>
+              <div class="row mb-3">
+
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                  <input
+                    class="form-control form-control-user"
+                    type="text"
+                    id="userName"
+                    placeholder="User name"
+                    formControlName="userName"
+                    />
+                </div>
+                <div class="col-sm-6">
+                  <input
+                    class="form-control form-control-user"
+                    type="email"
+                    id="email"
+                    aria-describedby="emailHelp"
+                    placeholder="Email Address"
+                    formControlName="email"
+                  />
+                </div>
+              </div>
+              <div class="row mb-3" formGroupName="passwords">
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                  <input class="form-control form-control-user"
+                         type="password"
+                         id="password"
+                         placeholder="Password"
+                         formControlName="password"
+                         />
+                </div>
+                <div class="col-sm-6">
+                  <input class="form-control form-control-user"
+                         type="password"
+                         id="confirmPassword"
+                         placeholder="Repeat Password"
+                         formControlName="confirmPassword"
+                         />
+                </div>
+              </div>
+              <button
+                *ngIf="!isLoading"
+                class="btn btn-primary d-block btn-user w-100"
+                [disabled]="!registerForm.valid"
+                type="submit">
+                Register Account
+              </button>
+              <button *ngIf="isLoading" class="btn btn-primary" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+              </button>
+              <hr/>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,105 @@
+<div lass="modal fade" tabindex="-1" aria-labelledby="alertModelLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="alertModelLabel">Create new user</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                (click)="activeModal.dismiss()"></button>
+      </div>
+      <div class="modal-body">
+        <form class="user"
+              [formGroup]="newUserForm"
+              >
+          <div class="row mb-3">
+            <div class="col-sm-6 mb-3 mb-sm-0">
+              <input
+                class="form-control form-control-user"
+                type="text"
+                id="firstName"
+                placeholder="First Name"
+                formControlName="firstName"
+                [ngClass]="{'red-border-class': !newUserForm.get('firstName').valid && newUserForm.get('firstName').touched}"
+                required/>
+            </div>
+            <div class="col-sm-6">
+              <input
+                class="form-control form-control-user"
+                type="text"
+                id="lastName"
+                placeholder="Last Name"
+                formControlName="lastName"
+                [ngClass]="{'red-border-class': !newUserForm.get('lastName').valid && newUserForm.get('lastName').touched}"
+                />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-6 mb-3 mb-sm-0">
+              <input
+                class="form-control form-control-user"
+                type="text"
+                id="userName"
+                placeholder="User name"
+                formControlName="userName"
+                [ngClass]="{'red-border-class': !newUserForm.get('userName').valid && newUserForm.get('userName').touched}"
+
+              />
+            </div>
+            <div class="col-sm-6">
+              <input
+                class="form-control form-control-user"
+                type="email"
+                id="email"
+                aria-describedby="emailHelp"
+                placeholder="Email Address"
+                formControlName="email"
+                [ngClass]="{'red-border-class': !newUserForm.get('email').valid && newUserForm.get('email').touched}"
+              />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-6 mb-3 mb-sm-0">
+              <div class="row">
+                <div class="col">
+                  <div ngbDropdown class="d-inline-block">
+                    <button
+                      class="btn btn-outline-primary form-control"
+                      id="role"
+                            ngbDropdownToggle>{{roleSelected}}</button>
+                    <div  ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                      <button *ngFor="let roleOption of roles" ngbDropdownItem (click)="selectRole(roleOption)">{{roleOption}}</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-check form-switch form-control">
+                <input class="form-check-input"
+                       type="checkbox"
+                       formControlName="isActive"
+                       id="isActive"
+                       >
+                <label class="form-check-label">Active</label>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-check form-switch form-control">
+                <input class="form-check-input"
+                       type="checkbox"
+                       formControlName="isLock"
+                       id="isLock"
+                       >
+                <label class="form-check-label">Lock</label>
+              </div>
+            </div>
+          </div>
+          <hr/>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="activeModal.close()">Cancel</button>
+        <button type="button" class="btn btn-primary" [disabled]="!newUserForm.valid" (click)="saveUser()">{{buttonLabel}}</button>
+      </div>
+    </div>
+  </div>
+</div>

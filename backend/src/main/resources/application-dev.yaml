@@ -1,0 +1,45 @@
+
+app:
+  security:
+    allowed-origins:
+      - ${frontend.dev.server}
+    allowed-methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      - OPTIONS
+    allowed-headers:
+      - Origin
+      - Access-Control-Allow-Origin
+      - Content-Type
+      - Accept
+      - Jwt-Token
+      - Authorization
+      - Origin, Accept
+      - X-Requested-With
+      - Access-Control-Allow-Headers
+      - Access-Control-Request-Method
+    expose-headers:
+      - Authorization
+      - Jwt-Token
+      - Origin
+      - Content-Type
+      - Accept
+      - Access-Control-Allow-Origin
+      - Access-Control-Allow-Credentials
+    first-user:
+      user-name: isagron
+      firstName: Innon
+      last-name: Sagron
+      email: innon12310@gmail.com
+      password: isagron
+    email_verification:
+      enable: false
+db:
+  host: localhost
+  username: root
+  password: isagron
+
+

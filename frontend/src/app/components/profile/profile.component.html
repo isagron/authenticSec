@@ -1,0 +1,177 @@
+<div class="container-fluid">
+  <h3 class="text-dark mb-4">Profile</h3>
+  <div class="row mb-3">
+    <div class="col-lg-4">
+      <div class="card mb-3">
+        <div class="card-body text-center shadow">
+
+          <img class="rounded-circle mb-3 mt-4" src="{{actualUser?.profileImageUrl}}" width="160" height="160" />
+          <div class="mb-3">
+            <button *ngIf = "!userWantToUpdatePhoto" class="btn btn-primary btn-sm" type="button" (click)="switchUploadImageMode()">Change Photo</button>
+          </div>
+          <form *ngIf = "userWantToUpdatePhoto" [formGroup]="uploadImageForm">
+            <div class="form-group">
+              <input type="file" class="form-control" id="file" formControlName="file" (change)="onImageChange($event)">
+              <div *ngIf="uf.file.touched && uf.file.invalid" class="alert alert-danger">
+                <div *ngIf="uf.file.errors.required">Image file is required.</div>
+              </div>
+            </div>
+
+            <br>
+            <Span class="m-5">
+              <button [disabled]="uf.file.invalid" class="btn btn-primary btn-sm me-5" type="button" (click)="uploadImage()">Upload File</button>
+              <button class="btn btn-close btn-sm" type="button" (click)="switchUploadImageMode()"></button>
+            </Span>
+          </form>
+        </div>
+      </div>
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="text-primary fw-bold m-0">Stat and Settings</h6>
+        </div>
+        <div class="card-body">
+          <h4 class="small fw-bold">Successful logins<span class="float-end">{{successfulLogin}}%</span></h4>
+          <div class="progress progress-sm mb-3">
+            <div
+              class="progress-bar bg-danger"
+              aria-valuenow=successfulLogin
+              aria-valuemin="0"
+              aria-valuemax="100"
+              [ngStyle]="{width: successfulLogin + '%'}"><span class="visually-hidden">{{successfulLogin}}%</span></div>
+          </div>
+          <h4 class="small fw-bold">Failure logins<span class="float-end">{{failureLogin}}%</span></h4>
+          <div class="progress progress-sm mb-3">
+            <div
+              class="progress-bar bg-danger"
+              aria-valuenow=successfulLogin
+              aria-valuemin="0"
+              aria-valuemax="100"
+              [ngStyle]="{width: failureLogin + '%'}"><span class="visually-hidden">{{failureLogin}}%</span></div>
+          </div>
+          <h4 class="small fw-bold">Last login<span class="float-end">{{actualUser?.joinDate | date: "dd/MM/yy"}}</span></h4>
+          <h4 class="small fw-bold">Last time renew password<span class="float-end">{{actualUser?.lastTimeRenewPassword | date: "dd/MM/yy"}}</span></h4>
+          <h4 class="small fw-bold">Account lock?<span class="float-end">{{actualUser?.isLock? 'Yes' : 'No'}}</span></h4>
+          <h4 class="small fw-bold">Account active?<span class="float-end">{{actualUser?.isActive? 'Yes' : 'No'}}</span></h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-8">
+      <div class="row">
+        <div class="col">
+          <div class="card shadow mb-3">
+            <div class="card-header py-3">
+              <p class="text-primary m-0 fw-bold">User Details</p>
+            </div>
+            <div class="card-body">
+              <form [formGroup]="editUserForm">
+                <div class="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label" for="username">
+                        <strong>Username</strong>
+                      </label>
+                      <input
+                        class="form-control"
+                        type="text"
+                        id="username"
+                        placeholder="{{actualUser?.userName}}"
+                        formControlName="userName"
+                        [ngClass]="{'red-border-class': !editUserForm.get('userName').valid && editUserForm.get('userName').touched}"
+                      />
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label" for="email">
+                        <strong>Email Address</strong>
+                      </label>
+                      <input
+                        class="form-control"
+                        type="email"
+                        id="email"
+                        placeholder="{{actualUser?.email}}"
+                        formControlName="email"
+                        [ngClass]="{'red-border-class': !editUserForm.get('email').valid && editUserForm.get('email').touched}"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label" for="firstName">
+                        <strong>First Name</strong>
+                      </label>
+                      <input
+                        class="form-control"
+                        type="text"
+                        id="firstName"
+                        formControlName="firstName"
+                        placeholder="{{actualUser?.firstName}}"
+                        [ngClass]="{'red-border-class': !editUserForm.get('firstName').valid && editUserForm.get('firstName').touched}"
+                      />
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label" for="lastName">
+                        <strong>Last Name</strong>
+                      </label>
+                      <input
+                        class="form-control"
+                        type="text"
+                        id="lastName"
+                        placeholder="{{actualUser?.lastName}}"
+                        formControlName="lastName"
+                        [ngClass]="{'red-border-class': !editUserForm.get('lastName').valid && editUserForm.get('lastName').touched}"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <button
+                    class="btn btn-primary btn-sm"
+                    type="submit"
+                    [disabled]="!editUserForm.valid" (click)="saveUserDetails()">Save</button></div>
+              </form>
+            </div>
+          </div>
+          <div class="card shadow">
+            <div class="card-header py-3">
+              <p class="text-primary m-0 fw-bold">Permissions</p>
+            </div>
+            <div class="card-body">
+              <form [formGroup]="roleForm">
+                <div class="mb-3">
+                  <label class="form-label" for="role">
+                    <strong>Role</strong>
+                  </label>
+                  <select
+                    class="form-select"
+                    id="role"
+                    aria-label="Default select example"
+                    formControlName="role"
+                    (change)="roleValueChange($event)"
+                    [(ngModel)]="selectedRoleName">
+                    <option [value]="role.name" *ngFor="let role of roles" [selected]="role.name===selectedRoleName">{{role.name}}</option>
+                  </select>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label"><strong>Authorities</strong></label>
+                      <ul *ngFor="let authority of authorities" class="list-group">
+                        <li class="list-group-item">{{authority}}</li>
+                      </ul >
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3"><button class="btn btn-primary btn-sm" type="button" (click)="saveRole()">Save</button></div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

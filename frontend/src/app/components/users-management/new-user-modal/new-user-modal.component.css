@@ -1,0 +1,8 @@
+form.user .form-control-user {
+  font-size: .8rem;
+  border-radius: 5rem;
+  padding: 0.5rem 0.2rem;
+}
+.red-border-class{
+  border: 1px solid red;
+}

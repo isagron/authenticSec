@@ -1,0 +1,63 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-9 col-lg-12 col-xl-10">
+      <div class="card shadow-lg o-hidden border-0 my-5">
+        <div class="card-body p-0">
+          <div class="row">
+            <div class="col-lg-6 d-none d-lg-flex">
+              <div class="flex-grow-1 bg-login-image" style="background-image: url('../../../assets/wall.jpg');"></div>
+            </div>
+            <div class="col-lg-6">
+              <div class="p-5">
+                <div class="text-center">
+                  <h4 class="text-dark mb-4">Welcome Back!</h4>
+                </div>
+                <div *ngIf="error" class="alert alert-danger" role="alert">
+                  {{error}}
+                </div>
+                <form
+                  class="user"
+                  #authForm="ngForm"
+                  (ngSubmit)="onSubmit(authForm)">
+                  <div class="mb-3">
+                    <input
+                      class="form-control form-control-user"
+                      type="text"
+                      id="userName"
+                      placeholder="Enter user name..."
+                      name="userName"
+                      ngModel
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <input
+                      class="form-control form-control-user"
+                      type="password"
+                      id="password"
+                      placeholder="Password"
+                      name="password"
+                      ngModel
+                      required/>
+                  </div>
+                  <button
+                    *ngIf="!isLoading"
+                    class="btn btn-primary d-block btn-user w-100"
+                    type="submit"
+                    [disabled]="!authForm.valid">
+                    Login</button>
+                  <button *ngIf="isLoading" class="btn btn-primary" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                  </button>
+                  <hr />
+                </form>
+                <div class="text-center"><a class="small" (click)="forgotPassword()">Forgot Password/User name?</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,58 @@
+server:
+  port: 8082
+  error:
+    path: "/error"
+
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: "org.hibernate.dialect.MariaDB103Dialect"
+  datasource:
+    url: 'jdbc:mariadb://${db.host}:3306/securityDb?createDatabaseIfNotExist=true'
+    username: "${db.username}"
+    password: "${db.password}"
+    driver-class-name: "org.mariadb.jdbc.Driver"
+  flyway:
+    enabled: false
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    smtp:
+      starttls:
+        enable: true
+    properties:
+      mail:
+        smtp:
+          starttls:
+            required: true
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+
+app:
+  security:
+    jwt:
+      secret: "security_manager_secret"
+      token_prefix: "Bearer "
+      #5 days
+      expiration_time_in_min: 7200
+      issuer: isagron
+      audience: administration
+      token_header: Jwt-Token
+    login_attempts:
+      maximum_number: 5
+      size_of_cache: 100
+      cache_expire_time_in_min: 15
+    email_verification:
+      enable: true
+      from: "no.reply@gmail.com"
+  user:
+    image:
+      folder: "/image"

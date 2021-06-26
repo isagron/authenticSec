@@ -1,0 +1,132 @@
+<ng-wizard (stepChanged)="stepChanged($event)" [config]="config">
+
+
+  <ng-wizard-step [canEnter]="isValidTypeBoolean" [canExit]="true"
+                  [description]="'Verified email'" [title]="'Step 1'">
+    <span>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-9 col-lg-12 col-xl-10">
+            <div class="card shadow-lg o-hidden border-0 my-5">
+              <div class="card-body p-0">
+                <div class="p-5">
+                <form [formGroup]="userMailForm" class="user">
+                  <div class="row">
+                    <div class="col-6 offset-3">
+                      <div class="mb-2">
+                               <label class="mb-2">Insert your email address</label>
+                    <input
+                      aria-describedby="emailHelp"
+                      class="form-control"
+                      formControlName="email"
+                      id="email"
+                      placeholder="Email Address"
+                      type="email"
+                      [ngClass]="{'red-border-class': !userMailForm.get('email').valid && userMailForm.get('email').touched}"
+                    />
+                      </div>
+                  <button
+                    class="btn btn-primary d-block btn-user w-100"
+                    type="button"
+                    [disabled]="!userMailForm.valid"
+                    (click)="verifiedEmail()">
+                    Submit</button>
+                      <p *ngIf="errorMessageVerifiedEmail" class="text-danger">{{errorMessageVerifiedEmail}}</p>
+                      <p *ngIf="emailVerifiedMessage" class="text-success">{{emailVerifiedMessage}}</p>
+                    </div>
+                  </div>
+                </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </ng-wizard-step>
+
+  <ng-wizard-step [canEnter]="true" [canExit]="verificationCodeForm.valid" [description]="'Confirmation code'"
+                  [title]="'Step 2'">
+    <span>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-9 col-lg-12 col-xl-10">
+            <div class="card shadow-lg o-hidden border-0 my-5">
+              <div class="card-body p-0">
+                <div class="p-5">
+                <form [formGroup]="verificationCodeForm" class="user">
+                  <div class="row">
+                    <div class="col-6 offset-3">
+                      <label class="mb-2">Insert the verification code your receive in your mail</label>
+                      <input
+                        class="form-control form-control-user"
+                        formControlName="userName"
+                        id="userName"
+                        placeholder="Enter your user name"
+                        type="text"
+                        [ngClass]="{'red-border-class': !verificationCodeForm.get('userName').valid && verificationCodeForm.get('userName').touched}"/>
+                      <input
+                        class="form-control form-control-user"
+                        formControlName="code"
+                        id="code"
+                        placeholder="Enter your verification code"
+                        type="text"
+                        [ngClass]="{'red-border-class': !verificationCodeForm.get('code').valid && verificationCodeForm.get('code').touched}"/>
+                        <button
+                          class="btn btn-primary d-block btn-user w-100"
+                          type="button"
+                          [disabled]="!verificationCodeForm.valid"
+                          (click)="verifiedCode()">Submit</button>
+                        <p *ngIf="errorMessageConfirmationCode" class="text-danger">{{errorMessageConfirmationCode}}</p>
+                        <p *ngIf="confirmationCodeVerifiedMessage" class="text-success">{{confirmationCodeVerifiedMessage}}</p>
+                    </div>
+                  </div>
+                </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </ng-wizard-step>
+
+  <ng-wizard-step
+    [canExit]="resetPasswordForm.valid"
+    [description]="'New password'"
+    [title]="'Step 3'">
+    <span>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-9 col-lg-12 col-xl-10">
+            <div class="card shadow-lg o-hidden border-0 my-5">
+              <div class="card-body p-0">
+                <div class="p-5">
+                  <form [formGroup]="resetPasswordForm" class="user">
+                    <div class="row" formGroupName="passwords">
+                      <div class="col-6 offset-3">
+                        <input class="form-control form-control-user mb-2"
+                               formControlName="password"
+                               id="password"
+                               placeholder="Password"
+                               type="password"/>
+                        <input class="form-control form-control-user"
+                               formControlName="confirmPassword"
+                               id="confirmPassword"
+                               placeholder="Repeat Password"
+                               type="password"/>
+                        <p *ngIf="passwordErrorMessage" class="text-danger">{{passwordErrorMessage}}</p>
+                        <p *ngIf="passwordVerifiedMessage" class="text-success">{{passwordVerifiedMessage}}</p>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </ng-wizard-step>
+
+</ng-wizard>
