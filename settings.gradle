@@ -1,0 +1,4 @@
+rootProject.name = 'spring-security-management-app'
+include 'backend'
+include 'frontend'
+
