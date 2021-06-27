@@ -39,6 +39,7 @@ export class AppErrorCodeMessage {
     this.errorCodeToMessageMap.set('security.authentication.method-not-allowed', 'This request method is not allowed on this endpoint');
     this.errorCodeToMessageMap.set('missing_verification_code', 'Please insert the code sent to your mail');
     this.errorCodeToMessageMap.set('login.attempts_exceed', 'To many login attempts, account has been lock');
+    this.errorCodeToMessageMap.set('security.authentication.password.expire', 'You need to reset your password');
   }
 
   public getMessage(code: string): string {

@@ -208,6 +208,7 @@ public class AuthServiceImpl implements AuthService {
      * @return
      */
     @Override
+    @Transactional
     public User resetPassword(ReplacePasswordRequest replacePasswordRequest){
         //find confirmation token
         String code = Optional.ofNullable(replacePasswordRequest.getConfirmation())
@@ -218,6 +219,7 @@ public class AuthServiceImpl implements AuthService {
 
         if (confirmationToken.getUser() != null &&
                 confirmationToken.getUser().getUserName().equals(replacePasswordRequest.getUserName())) {
+            this.confirmationTokenRepository.deleteById(confirmationToken.getId());
             return replacePassword(replacePasswordRequest);
         }
 

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.persistence.NoResultException;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.stream.Collectors;
 
@@ -93,6 +94,7 @@ public class SecurityExceptionsHandler {
         log.error("Global Exception error handler exception: ", ex);
         return ErrorDto.builder()
                 .httpStatus(HttpStatus.BAD_REQUEST)
+                .applicationErrorCode(Arrays.asList(AppErrorCode.INCORRECT_CREDENTIALS.code()))
                 .message(AppErrorCode.INCORRECT_CREDENTIALS.defaultMessageFormat())
                 .timeStamp(Calendar.getInstance().getTime())
                 .build();

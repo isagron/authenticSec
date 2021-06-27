@@ -74,14 +74,14 @@ export class AuthService {
   }
 
   public confirmToken(userName: string, code: string): Observable<User> {
-    return this.http.post<User>(this.confirmUrl, {
+    return this.http.post<User>(this.apiUrl + this.confirmUrl, {
       userName,
       code
     });
   }
 
   public validateCodeForReset(userName: string, code: string): Observable<User> {
-    return this.http.post<User>(this.isValidCodeForReset, {
+    return this.http.post<any>(this.apiUrl + this.isValidCodeForReset, {
       userName,
       code
     });
