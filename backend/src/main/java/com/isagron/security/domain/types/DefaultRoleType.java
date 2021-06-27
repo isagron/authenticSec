@@ -1,6 +1,6 @@
 package com.isagron.security.domain.types;
 
-import com.isagron.security.utils.AuthorityConstant;
+import com.isagron.security.configuration.constant.AuthorityConstant;
 import lombok.Getter;
 
 import java.util.Arrays;

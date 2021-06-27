@@ -20,6 +20,9 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entity class represent role in the application
+ */
 @Entity
 @Getter
 @Setter
@@ -28,16 +31,28 @@ import java.util.List;
 @Builder
 public class Role {
 
+    /**
+     * Identifier of the role
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    /**
+     * Name of the role, must be unique
+     */
     @Column(unique = true)
     private String name;
 
+    /**
+     * Role can have many authorities
+     */
     @ManyToMany(mappedBy = "roles")
     private List<Authority> authorities;
 
+    /**
+     * Role can be associate to multiple users
+     */
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
     private List<User> users;
 

@@ -87,7 +87,7 @@ export class VerificationComponent implements OnInit, OnDestroy {
   validateConfirmPassword(control: FormControl): { [key: string]: boolean } {
     if (control.get('password').value !== control.get('confirmPassword').value) {
       console.log('valid');
-      return {'passwordMustBeMatch': true};
+      return {passwordMustBeMatch: true};
     }
     return null;
   }
@@ -126,20 +126,12 @@ export class VerificationComponent implements OnInit, OnDestroy {
     }
   }
 
-  isValidFunctionReturnsBoolean(args: StepValidationArgs) {
-    return true;
-  }
-
-  isValidFunctionReturnsObservable(args: StepValidationArgs) {
-    return of(true);
-  }
-
   private startStepInsetMail() {
 
   }
 
   private cancel() {
-
+    this.router.navigate(['/']);
   }
 
   private endStepInsetMail() {
@@ -166,7 +158,7 @@ export class VerificationComponent implements OnInit, OnDestroy {
         });
       } else {
         this.passwordVerifiedMessage = null;
-        this.passwordErrorMessage = "Passwords not match";
+        this.passwordErrorMessage = 'Passwords not match';
       }
     });
 

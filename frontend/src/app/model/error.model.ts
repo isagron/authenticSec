@@ -38,6 +38,7 @@ export class AppErrorCodeMessage {
     this.errorCodeToMessageMap.set('security.authentication.internal-server-error', 'An error occurred while processing the request');
     this.errorCodeToMessageMap.set('security.authentication.method-not-allowed', 'This request method is not allowed on this endpoint');
     this.errorCodeToMessageMap.set('missing_verification_code', 'Please insert the code sent to your mail');
+    this.errorCodeToMessageMap.set('login.attempts_exceed', 'To many login attempts, account has been lock');
   }
 
   public getMessage(code: string): string {

@@ -4,12 +4,22 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * DTO class, represent a request to validate confirmation code
+ */
 @Data
 public class ConfirmTokenRequest {
 
-    @NotBlank
+
+    /**
+     * The user username as identifier
+     */
+    @NotBlank(message = "You must provide a user name")
     private String userName;
 
-    @NotBlank
+    /**
+     * The code to confirm
+     */
+    @NotBlank(message = "You must provide a code")
     private String code;
 }

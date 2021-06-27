@@ -1,4 +1,4 @@
-package com.isagron.security.utils;
+package com.isagron.security.configuration.constant;
 
 public class AuthorityConstant {
 

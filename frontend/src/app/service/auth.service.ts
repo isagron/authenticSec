@@ -1,14 +1,13 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {environment} from '../../environments/environment';
-import {BehaviorSubject, Observable, throwError} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {User} from '../model/user.model';
-import {catchError, map, tap} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {AppError} from '../model/error.model';
 import {HeaderType} from '../model/auth.model';
 import {Router} from '@angular/router';
-import {WebSocketService} from './web-socket.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +23,8 @@ export class AuthService {
   private resetPasswordUrl = '/reset-password';
   private isValidCodeForReset = '/is-valid-code-for-reset';
 
-  public publicUrls = [this.loginUrl, this.registerUrl, this.confirmUrl, this.requestResetPasswordUrl, this.resetPasswordUrl, this.isValidCodeForReset];
+  public publicUrls = [this.loginUrl, this.registerUrl, this.confirmUrl, this.requestResetPasswordUrl, this.resetPasswordUrl,
+    this.isValidCodeForReset];
 
   private token: string;
   private loggedInUserName: string;

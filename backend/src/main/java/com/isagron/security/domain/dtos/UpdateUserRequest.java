@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class UpdateUserRequest {
 
-    @NotBlank
+    @NotBlank(message = "You must provide user name, to identified the user you want to update")
     private String userName;
 
     private UserPropertiesRequest userPropertiesRequest;

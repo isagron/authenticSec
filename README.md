@@ -49,13 +49,17 @@ app.security.first-user:
   password: isagron
 ```
 
-##### Bruteforce protection
+##### Login 
 ```yaml
-app.security.login_attempts:
-  maximum_number: 5
-  #size of buffer to store users login attempts, clear data after user succeed
-  size_of_cache: 100
-  cache_expire_time_in_min: 15
+app:
+  security:
+    login_attempts:
+      maximum_number: 5
+      #size of buffer to store users login attempts, clear data after user succeed
+      size_of_cache: 100
+      cache_expire_time_in_min: 15
+    password_expiration_time_in_hours: 720
+    confirmation_code_experition_in_sec: 120
 ```
 ##### Mail configuration
 ```yaml

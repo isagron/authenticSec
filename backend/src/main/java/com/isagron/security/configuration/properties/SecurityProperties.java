@@ -26,4 +26,8 @@ public class SecurityProperties {
 
     private User firstUser;
 
+    private int passwordExpirationTimeInHours;
+
+    private int confirmationCodeExpirationInSec;
+
 }

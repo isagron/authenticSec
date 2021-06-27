@@ -5,14 +5,17 @@ import lombok.experimental.FieldNameConstants;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * DTO user for login API
+ */
 @Data
 @FieldNameConstants
 public class LoginRequest {
 
-    @NotBlank
+    @NotBlank(message = "User name can't be blank")
     private String userName;
 
-    @NotBlank
+    @NotBlank(message = "Password can't be blank")
     private String password;
 
 }

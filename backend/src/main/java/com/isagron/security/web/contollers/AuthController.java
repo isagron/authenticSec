@@ -8,6 +8,8 @@ import com.isagron.security.domain.dtos.ReplacePasswordRequest;
 import com.isagron.security.domain.dtos.UserDto;
 import com.isagron.security.domain.entities.User;
 import com.isagron.security.services.features.auth.AuthService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -36,12 +38,14 @@ public class AuthController {
         this.modelMapper = modelMapper;
     }
 
+    @ApiOperation("Register new user")
     @PostMapping("/register")
     public UserDto register(@Validated @RequestBody RegisterRequest registerRequest) {
         User user = authService.register(registerRequest);
         return modelMapper.map(user, UserDto.class);
     }
 
+    @ApiOperation("Validate confirmation code")
     @PostMapping("/confirm")
     public UserDto confirm(@Validated @RequestBody ConfirmTokenRequest confirmTokenRequest) {
         User user = authService.confirmUser(confirmTokenRequest.getUserName(), confirmTokenRequest.getCode());

@@ -5,7 +5,7 @@ import com.isagron.security.services.filters.JwtAccessDeniedHandler;
 import com.isagron.security.services.filters.JwtAuthenticationEntryPoint;
 import com.isagron.security.services.filters.JwtAuthorizationFilter;
 import com.isagron.security.services.resources.UserService;
-import com.isagron.security.utils.AppConstant;
+import com.isagron.security.configuration.constant.AppConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,8 +23,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -51,6 +49,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(securityProperties.getAllowedOrigins());
+        configuration.setAllowedMethods(securityProperties.getAllowedMethods());
+        configuration.setAllowedHeaders(securityProperties.getAllowedHeaders());
+        configuration.setExposedHeaders(securityProperties.getExposeHeaders());
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService)
@@ -65,18 +75,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     }
 
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(securityProperties.getAllowedOrigins());
-        configuration.setAllowedMethods(securityProperties.getAllowedMethods());
-        configuration.setAllowedHeaders(securityProperties.getAllowedHeaders());
-        configuration.setExposedHeaders(securityProperties.getExposeHeaders());
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

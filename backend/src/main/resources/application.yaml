@@ -53,6 +53,9 @@ app:
     email_verification:
       enable: true
       from: "no.reply@gmail.com"
+      #30 days
+    password_expiration_time_in_hours: 720
+    confirmation_code_expiration_in_sec: 120
   user:
     image:
       folder: "/image"

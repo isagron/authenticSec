@@ -16,6 +16,9 @@ import javax.persistence.ManyToMany;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entity class represent authority in the server
+ */
 @Entity
 @Getter
 @Setter
@@ -23,16 +26,29 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class Authority {
+    /**
+     * Identifier of the authority
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    /**
+     * The name of the authority, must be unique
+     */
     @Column(unique = true)
     private String name;
 
+    /**
+     * List of role entities associate with this authority
+     */
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Role> roles;
 
+    /**
+     * Add new role, this method take care of the bidirectional binding
+     * @param role - the role to add
+     */
     public void addRole(Role role) {
         if (this.roles == null){
             this.roles = new ArrayList<>();
@@ -40,6 +56,10 @@ public class Authority {
         this.roles.add(role);
     }
 
+    /**
+     * Remove the given role
+     * @param role - role to remove
+     */
     public void removeRole(Role role) {
         this.roles.removeIf(persistRole -> persistRole.getName().equals(role.getName()));
     }

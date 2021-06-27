@@ -4,7 +4,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.OK;
 import com.isagron.security.configuration.properties.JwtProperties;
 import com.isagron.security.services.token_provider.JWTTokenProvider;
-import com.isagron.security.utils.AppConstant;
+import com.isagron.security.configuration.constant.AppConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

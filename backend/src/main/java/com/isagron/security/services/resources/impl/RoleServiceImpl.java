@@ -56,13 +56,6 @@ public class RoleServiceImpl implements RoleService {
                 .collect(Collectors.toList());
     }
 
-    private RoleDto convertToDto(Role role) {
-        return RoleDto.builder()
-                .name(role.getName())
-                .authorities(role.getAuthorities().stream().map(Authority::getName).collect(Collectors.toList()))
-                .build();
-    }
-
     @Override
     public List<String> getAllAuthoritiesNames() {
         return this.authorityRepository.findAll()
@@ -157,5 +150,12 @@ public class RoleServiceImpl implements RoleService {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
+    }
+
+    private RoleDto convertToDto(Role role) {
+        return RoleDto.builder()
+                .name(role.getName())
+                .authorities(role.getAuthorities().stream().map(Authority::getName).collect(Collectors.toList()))
+                .build();
     }
 }

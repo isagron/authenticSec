@@ -40,4 +40,5 @@ public interface UserService extends UserDetailsService {
 
     Page<User> getUsers(String userName, String role, Pageable p);
 
+    boolean isPasswordExpire(String userName, int time);
 }

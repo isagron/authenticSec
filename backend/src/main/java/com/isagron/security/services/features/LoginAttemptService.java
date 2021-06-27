@@ -22,6 +22,9 @@ public class LoginAttemptService {
 
     private LoadingCache<String, Integer> loginAttemptCache;
 
+    /**
+     * Set the size of the cache according to property configuration
+     */
     @PostConstruct
     private void init(){
         loginAttemptCache = CacheBuilder.newBuilder().expireAfterWrite(loginAttemptProperties.getCacheExpireTimeInMin(), TimeUnit.MINUTES)
@@ -33,11 +36,19 @@ public class LoginAttemptService {
                 });
     }
 
+    /**
+     * remove user from cache
+     * @param userName - the user name
+     */
     public void removeUser(String userName) {
         //remove the entry from the cache
         loginAttemptCache.invalidate(userName);
     }
 
+    /**
+     * Add user to cache
+     * @param userName - the user name
+     */
     public void addUser(String userName){
         try{
             int attempts = ATTEMPT_INCREMENT + loginAttemptCache.get(userName);

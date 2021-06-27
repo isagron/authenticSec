@@ -14,6 +14,7 @@ public enum  AppErrorCode {
     ROLE_ALREADY_EXIST("role.already_exist", "Role %s already exist" ),
     AUTHORITY_NOT_EXIST("role.authorities.not_exist", "Authority %s not exist" ),
     AUTHORITY_ALREADY_EXIST("role.authorities.exist", "Authority %s already exist" ),
+    LOGIN_ATTEMPTS_EXCEED("login.attempts_exceed", "To many login attempts, account has been lock" ),
 
 
     PASSWORD_RESET("security.authentication.password.expire",

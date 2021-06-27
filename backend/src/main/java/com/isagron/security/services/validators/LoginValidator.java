@@ -1,5 +1,6 @@
 package com.isagron.security.services.validators;
 
+import com.isagron.security.configuration.properties.SecurityProperties;
 import com.isagron.security.domain.dtos.LoginRequest;
 import com.isagron.security.domain.entities.User;
 import com.isagron.security.domain.repositories.UserRepository;
@@ -16,6 +17,8 @@ import java.util.Optional;
 public class LoginValidator implements OperationValidator {
 
     private final UserRepository userRepository;
+
+    private final SecurityProperties securityProperties;
 
 
     @Override

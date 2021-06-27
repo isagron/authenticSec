@@ -1,6 +1,5 @@
 package com.isagron.security.services.features.auth;
 
-import com.isagron.security.domain.dtos.ConfirmTokenRequest;
 import com.isagron.security.domain.dtos.LoginRequest;
 import com.isagron.security.domain.dtos.RegisterRequest;
 import com.isagron.security.domain.dtos.ReplacePasswordRequest;

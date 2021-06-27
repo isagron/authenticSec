@@ -1,28 +1,26 @@
 package com.isagron.security.services.features.auth;
 
 import com.isagron.security.configuration.properties.SecurityProperties;
-import com.isagron.security.domain.dtos.ConfirmTokenRequest;
 import com.isagron.security.domain.dtos.LoginRequest;
 import com.isagron.security.domain.dtos.RegisterRequest;
 import com.isagron.security.domain.dtos.ReplacePasswordRequest;
 import com.isagron.security.domain.entities.ConfirmationToken;
-import com.isagron.security.domain.entities.Role;
 import com.isagron.security.domain.entities.User;
 import com.isagron.security.domain.model.UserPrincipal;
 import com.isagron.security.domain.repositories.ConfirmationTokenRepository;
 import com.isagron.security.domain.types.DefaultRoleType;
 import com.isagron.security.exceptions.ConfirmationTokenNotExistException;
 import com.isagron.security.exceptions.InvalidConfirmationTokenException;
+import com.isagron.security.exceptions.LoginAttemptsExceedException;
+import com.isagron.security.exceptions.PasswordExpireException;
 import com.isagron.security.services.features.EmailSenderService;
 import com.isagron.security.services.features.LoginAttemptService;
-import com.isagron.security.services.resources.RoleService;
 import com.isagron.security.services.resources.UserService;
 import com.isagron.security.services.token_provider.JWTTokenProvider;
 import com.isagron.security.services.validators.AppOperation;
 import com.isagron.security.services.validators.ValidatorMng;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -57,11 +54,17 @@ public class AuthServiceImpl implements AuthService {
 
     private final EmailSenderService emailSenderService;
 
-    private final RoleService roleService;
+    private final PasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    private PasswordEncoder bCryptPasswordEncoder;
-
+    /**
+     * Authenticate user according to user name and password
+     * validate login request (user exist, email verified, expire password)
+     * validate login attempts not exceed
+     * validate if the user doesn't need to renew password
+     * Authenticate user user spring boot security chain
+     * @param loginRequest - login request including user credential
+     * @return - login user
+     */
     @Override
     @Transactional
     public User login(LoginRequest loginRequest) {
@@ -71,6 +74,11 @@ public class AuthServiceImpl implements AuthService {
         if (loginAttemptService.isExceed(loginRequest.getUserName())) {
             userService.lockUser(loginRequest.getUserName());
             loginAttemptService.removeUser(loginRequest.getUserName());
+            throw new LoginAttemptsExceedException();
+        }
+
+        if (userService.isPasswordExpire(loginRequest.getUserName(), securityProperties.getPasswordExpirationTimeInHours())){
+            throw new PasswordExpireException();
         }
 
         //throw exception in case of failure
@@ -86,12 +94,12 @@ public class AuthServiceImpl implements AuthService {
 
     }
 
-    private void authenticate(String userName, String password) {
-        this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                userName, password
-        ));
-    }
 
+    /**
+     * Return http header, with token header set
+     * @param user - the user from who the token generated
+     * @return - http headers element
+     */
     @Override
     public HttpHeaders getJwtHeader(User user) {
         HttpHeaders headers = new HttpHeaders();
@@ -99,6 +107,11 @@ public class AuthServiceImpl implements AuthService {
         return headers;
     }
 
+    /**
+     * Register a new user in the system
+     * @param registerRequest - container to properties required for registration
+     * @return - register user
+     */
     @Override
     @Transactional
     public User register(RegisterRequest registerRequest) {
@@ -116,26 +129,21 @@ public class AuthServiceImpl implements AuthService {
 
         //send confirmation mail
         if (securityProperties.getEmailVerification().isEnable()) {
-            confirmUserViaEmail(user);
+            confirmUserRegistrationViaEmail(user);
         }
 
         return user;
     }
 
-    private void confirmUserViaEmail(User user) {
-        ConfirmationToken confirmationToken = new ConfirmationToken(user);
 
-        confirmationTokenRepository.save(confirmationToken);
-
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(user.getEmail());
-        mailMessage.setSubject("Complete Registration!");
-        mailMessage.setFrom(securityProperties.getEmailVerification().getFrom());
-        mailMessage.setText("Your code: " + confirmationToken.getConfirmationToken());
-
-        emailSenderService.sendEmail(mailMessage);
-    }
-
+    /**
+     * Confirm the receive code against the user name according to what saved in the database
+     * If code is confirm, the user set back to active and email verification flag set to true
+     * The confirmation code remove after confirmation
+     * @param userName - the user name associate with the code
+     * @param code - the confirmation code
+     * @return - the confirmed user
+     */
     @Override
     @Transactional
     public User confirmUser(String userName, String code) {
@@ -144,7 +152,9 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(ConfirmationTokenNotExistException::new);
 
         //compare user name from token to userName @param
-        if (confirmationToken.getUser() != null && confirmationToken.getUser().getUserName().equals(userName)) {
+        if (confirmationToken.getUser() != null &&
+                confirmationToken.getUser().getUserName().equals(userName) &&
+        !confirmationToken.isExpire(securityProperties.getConfirmationCodeExpirationInSec())) {
             confirmationToken.getUser().setActive(true);
             confirmationToken.getUser().setEmailVerification(true);
             this.confirmationTokenRepository.deleteById(confirmationToken.getId());
@@ -154,6 +164,11 @@ public class AuthServiceImpl implements AuthService {
         throw new InvalidConfirmationTokenException();
     }
 
+    /**
+     * Update the user password value
+     * @param replacePasswordRequest - information element for replacing password
+     * @return - the user
+     */
     @Override
     @Transactional
     public User replacePassword(ReplacePasswordRequest replacePasswordRequest){
@@ -161,6 +176,7 @@ public class AuthServiceImpl implements AuthService {
         String encodedPassword = encodePassword(replacePasswordRequest.getNewPassword());
         user.setPassword(encodedPassword);
         user.setNeedToReplacePassword(false);
+        user.setLastTimeRenewPassword(new Date());
         return user;
     }
 
@@ -168,7 +184,7 @@ public class AuthServiceImpl implements AuthService {
     /**
      * In case the user is not login and want to reset the password
      * We send verification code to his mail, he can activate the reset password only with the verifcation code
-     * @param email
+     * @param email - user email
      */
     @Override
     @Transactional
@@ -184,7 +200,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-
+    /**
+     * Request to reset the user password.
+     * This method receive a new password, user name and confirmation code.
+     * First it confirm the code assoicate with the user, if the code is valid it call the replace password method
+     * @param replacePasswordRequest
+     * @return
+     */
     @Override
     public User resetPassword(ReplacePasswordRequest replacePasswordRequest){
         //find confirmation token
@@ -202,6 +224,11 @@ public class AuthServiceImpl implements AuthService {
         throw new UsernameNotFoundException(replacePasswordRequest.getUserName());
     }
 
+    /**
+     * Validate the code and the user with userName @param match
+     * @param userName - user name
+     * @param code - verification code
+     */
     @Override
     public void isValidCodeForReset(String userName, String code) {
         //find confirmation token
@@ -217,13 +244,42 @@ public class AuthServiceImpl implements AuthService {
         throw new InvalidConfirmationTokenException();
     }
 
-    private String generatePassword() {
-        return UUID.randomUUID().toString();
-    }
-
+    /**
+     * Encoded password using bCrypt encoder
+     * @param password - the password to encrypt
+     * @return - encrypted password
+     */
     private String encodePassword(String password) {
         return bCryptPasswordEncoder.encode(password);
     }
 
+    /**
+     * authenticate user using spring boot security chain
+     * @param userName - the user name
+     * @param password - password (not encrypt)
+     */
+    private void authenticate(String userName, String password) {
+        this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                userName, password
+        ));
+    }
+
+    /**
+     * Send an email to the user with his confirmation code to complete the registration procedure
+     * @param user
+     */
+    private void confirmUserRegistrationViaEmail(User user) {
+        ConfirmationToken confirmationToken = new ConfirmationToken(user);
+
+        confirmationTokenRepository.save(confirmationToken);
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getEmail());
+        mailMessage.setSubject("Complete Registration!");
+        mailMessage.setFrom(securityProperties.getEmailVerification().getFrom());
+        mailMessage.setText("Your code: " + confirmationToken.getConfirmationToken());
+
+        emailSenderService.sendEmail(mailMessage);
+    }
 
 }

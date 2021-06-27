@@ -17,9 +17,9 @@ import java.util.List;
 @FieldNameConstants
 public class RoleDto {
 
-    @NotBlank
+    @NotBlank(message = "You must provide role name")
     private String name;
 
-    @NotEmpty
+    @NotEmpty(message = "Role must have authorities associate to it")
     private List<String> authorities;
 }

@@ -19,38 +19,35 @@ public class WebSocketService {
         this.template.convertAndSend(topic.name, message);
     }
 
-    public void sendUpdateMessage(UserDto user){
-        this.sendMessage(ClientTopic.USER, ClientMessageType.UPDATE, user);
-    }
-
+    // Create
     public void sendCreateMessage(UserDto user){
         this.sendMessage(ClientTopic.USER, ClientMessageType.CREATE, user);
     }
-
-    public void sendDeleteMessage(UserDto user){
-        this.sendMessage(ClientTopic.USER, ClientMessageType.DELETE, user);
-    }
-
-    public void sendUpdateMessage(RoleDto role){
-        this.sendMessage(ClientTopic.ROLE, ClientMessageType.UPDATE, role);
-    }
-
     public void sendCreateMessage(RoleDto role){
         this.sendMessage(ClientTopic.ROLE, ClientMessageType.CREATE, role);
     }
-
-    public void sendDeleteMessage(RoleDto role){
-        this.sendMessage(ClientTopic.ROLE, ClientMessageType.DELETE, role);
-    }
-
-    public void sendUpdateMessage(AuthorityDto authority){
-        this.sendMessage(ClientTopic.AUTHORITY, ClientMessageType.UPDATE, authority);
-    }
-
     public void sendCreateMessage(AuthorityDto authority){
         this.sendMessage(ClientTopic.AUTHORITY, ClientMessageType.CREATE, authority);
     }
 
+
+    // Update
+    public void sendUpdateMessage(UserDto user){
+        this.sendMessage(ClientTopic.USER, ClientMessageType.UPDATE, user);
+    }
+    public void sendUpdateMessage(RoleDto role){
+        this.sendMessage(ClientTopic.ROLE, ClientMessageType.UPDATE, role);
+    }
+    public void sendUpdateMessage(AuthorityDto authority){
+        this.sendMessage(ClientTopic.AUTHORITY, ClientMessageType.UPDATE, authority);
+    }
+    //Delete
+    public void sendDeleteMessage(UserDto user){
+        this.sendMessage(ClientTopic.USER, ClientMessageType.DELETE, user);
+    }
+    public void sendDeleteMessage(RoleDto role){
+        this.sendMessage(ClientTopic.ROLE, ClientMessageType.DELETE, role);
+    }
     public void sendDeleteMessage(AuthorityDto authority){
         this.sendMessage(ClientTopic.AUTHORITY, ClientMessageType.DELETE, authority);
     }
