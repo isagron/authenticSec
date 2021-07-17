@@ -13,7 +13,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 ## UI screenshots
 
 Login page
-![alt text](https://github.com/isagron/authenticSec/blob/master/backend/src/main/resources/doc_images/create-user-form.JPG)
+![alt text](https://github.com/isagron/authenticSec/blob/master/backend/src/main/resources/doc_images/login.JPG)
 
 Reset password wizard
 ![alt text](https://github.com/isagron/authenticSec/blob/master/backend/src/main/resources/doc_images/forgot-password-wizard.JPG)
